@@ -1,0 +1,45 @@
+﻿@model InternalBookingApp.Models.Booking
+@{
+    ViewData["Title"] = "Create Booking";
+}
+
+<h1 class="text-2xl font-bold text-teal-600 mb-4">Create New Booking</h1>
+
+<form asp-action="Create" method="post" class="space-y-6 bg-white p-6 shadow rounded-lg">
+    <div>
+        <label asp-for="ResourceId" class="block font-semibold text-gray-700">Select Resource</label>
+        <select asp-for="ResourceId" class="w-full p-2 border border-gray-300 rounded" asp-items="ViewBag.Resources">
+            <option value="">-- Select --</option>
+        </select>
+        <span asp-validation-for="ResourceId" class="text-red-500 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="UserId" class="block font-semibold text-gray-700">Select User</label>
+        <select asp-for="UserId" class="w-full p-2 border border-gray-300 rounded" asp-items="ViewBag.Users">
+            <option value="">-- Select --</option>
+        </select>
+        <span asp-validation-for="UserId" class="text-red-500 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="StartTime" class="block font-semibold text-gray-700">Start Time</label>
+        <input asp-for="StartTime" type="datetime-local" class="w-full p-2 border border-gray-300 rounded" />
+        <span asp-validation-for="StartTime" class="text-red-500 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="EndTime" class="block font-semibold text-gray-700">End Time</label>
+        <input asp-for="EndTime" type="datetime-local" class="w-full p-2 border border-gray-300 rounded" />
+        <span asp-validation-for="EndTime" class="text-red-500 text-sm"></span>
+    </div>
+
+    <button type="submit" class="bg-teal-600 text-white px-6 py-2 rounded hover:bg-teal-700">Save Booking</button>
+    <a asp-action="Index" class="text-teal-600 hover:underline ml-4">Cancel</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

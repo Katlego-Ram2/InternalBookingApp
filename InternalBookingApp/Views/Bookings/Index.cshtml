@@ -1,0 +1,37 @@
+﻿// Views/Booking/Index.cshtml
+@model IEnumerable<InternalBookingApp.Models.Booking>
+@{
+    ViewData["Title"] = "Booking List";
+}
+
+<h2 class="text-2xl font-bold mb-4">Bookings</h2>
+<p>
+    <a class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded" asp-action="Create">Create New Booking</a>
+</p>
+<table class="table-auto w-full border mt-4">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="px-4 py-2 border">Resource</th>
+            <th class="px-4 py-2 border">User</th>
+            <th class="px-4 py-2 border">Start</th>
+            <th class="px-4 py-2 border">End</th>
+            <th class="px-4 py-2 border">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr class="hover:bg-gray-50">
+                <td class="px-4 py-2 border">@booking.Resource?.Name</td>
+                <td class="px-4 py-2 border">@booking.User?.FullName</td>
+                <td class="px-4 py-2 border">@booking.StartTime</td>
+                <td class="px-4 py-2 border">@booking.EndTime</td>
+                <td class="px-4 py-2 border">
+                    <form asp-action="Delete" asp-route-id="@booking.BookingId" method="post" onsubmit="return confirm('Are you sure?');">
+                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
