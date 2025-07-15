@@ -1,0 +1,1 @@
+// Resource.cs placeholder content

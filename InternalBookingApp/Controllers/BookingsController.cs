@@ -1,0 +1,1 @@
+// BookingsController.cs placeholder content
