@@ -11,7 +11,6 @@ namespace InternalBookingApp.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
-
         public string Location { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Capacity must be positive.")]
@@ -19,7 +18,6 @@ namespace InternalBookingApp.Models
 
         public bool IsAvailable { get; set; } = true;
 
-        // Navigation
         public ICollection<Booking> Bookings { get; set; }
     }
 }
