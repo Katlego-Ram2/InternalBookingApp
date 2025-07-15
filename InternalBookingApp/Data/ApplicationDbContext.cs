@@ -8,8 +8,8 @@ namespace InternalBookingApp.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        public DbSet<Resource> Resources { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Resource> Resources { get; set; } = null!;
+        public DbSet<Booking> Bookings { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

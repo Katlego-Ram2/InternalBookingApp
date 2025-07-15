@@ -57,13 +57,18 @@ namespace InternalBookingApp.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var resource = await _context.Resources.FindAsync(id);
-            return View(resource);
+            return resource == null ? NotFound() : View(resource);
         }
 
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var resource = await _context.Resources.FindAsync(id);
+            if (resource == null)
+            {
+                return NotFound();
+            }
+
             _context.Resources.Remove(resource);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
