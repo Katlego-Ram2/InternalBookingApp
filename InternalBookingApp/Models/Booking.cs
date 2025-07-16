@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InternalBookingApp.Models
 {
@@ -10,12 +9,10 @@ namespace InternalBookingApp.Models
         public int BookingId { get; set; }
 
         [Required]
-        [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string BookedBy { get; set; } = string.Empty;
 
         [Required]
-        [ForeignKey("Resource")]
-        public int ResourceId { get; set; }
+        public string Purpose { get; set; } = string.Empty;
 
         [Required]
         public DateTime StartTime { get; set; }
@@ -23,12 +20,13 @@ namespace InternalBookingApp.Models
         [Required]
         public DateTime EndTime { get; set; }
 
-        [MaxLength(20)]
-        public string Status { get; set; } = "Pending"; // e.g. Pending, Confirmed, Cancelled
+        public string? Notes { get; set; }
 
-        public string Notes { get; set; }
+        // Relationships
+        public int ResourceId { get; set; }
 
-        public User User { get; set; }
-        public Resource Resource { get; set; }
+        public Resource? Resource { get; set; }
+
+        public string? User { get; set; }
     }
 }

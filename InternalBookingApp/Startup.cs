@@ -20,14 +20,15 @@ namespace InternalBookingApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Configure EF Core with SQL Server (update connection string in appsettings.json)
+            // Use SQL Server with connection string from appsettings.json
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            // Add BookingService as scoped service
+            // Business logic service
             services.AddScoped<BookingService>();
 
-            services.AddControllers();
+            // ✅ Enable MVC with views
+            services.AddControllersWithViews();
 
             // Optional: Swagger for API testing
             services.AddEndpointsApiExplorer();
@@ -44,12 +45,19 @@ namespace InternalBookingApp
                 app.UseSwaggerUI();
             }
 
+            app.UseStaticFiles(); // ✅ Enable static file support (CSS, JS, etc.)
+
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                // Also map API controllers
                 endpoints.MapControllers();
             });
         }

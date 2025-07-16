@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace InternalBookingApp.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ResourcesController : ControllerBase
+    public class ResourcesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -18,69 +16,71 @@ namespace InternalBookingApp.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Resource>>> GetResources()
+        public async Task<IActionResult> Index()
         {
-            return await _context.Resources.ToListAsync();
+            var resources = await _context.Resources.ToListAsync();
+            return View(resources);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Resource>> GetResource(int id)
+        public IActionResult Create()
         {
-            var resource = await _context.Resources.FindAsync(id);
-
-            if (resource == null)
-                return NotFound();
-
-            return resource;
+            return View();
         }
 
         [HttpPost]
-        public async Task<ActionResult<Resource>> CreateResource(Resource resource)
+        public async Task<IActionResult> Create(Resource resource)
         {
-            _context.Resources.Add(resource);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetResource), new { id = resource.ResourceId }, resource);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateResource(int id, Resource resource)
-        {
-            if (id != resource.ResourceId)
-                return BadRequest();
-
-            _context.Entry(resource).State = EntityState.Modified;
-
-            try
+            if (ModelState.IsValid)
             {
+                _context.Resources.Add(resource);
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ResourceExists(id))
-                    return NotFound();
-                else
-                    throw;
-            }
-
-            return NoContent();
+            return View(resource);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteResource(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var resource = await _context.Resources.FindAsync(id);
-            if (resource == null)
-                return NotFound();
-
-            _context.Resources.Remove(resource);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            if (resource == null) return NotFound();
+            return View(resource);
         }
 
-        private bool ResourceExists(int id) =>
-            _context.Resources.AnyAsync(e => e.ResourceId == id).Result;
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, Resource resource)
+        {
+            if (id != resource.ResourceId) return BadRequest();
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(resource);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(resource);
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var resource = await _context.Resources.FindAsync(id);
+            if (resource == null) return NotFound();
+            return View(resource);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var resource = await _context.Resources.FindAsync(id);
+            _context.Resources.Remove(resource);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var resource = await _context.Resources.FirstOrDefaultAsync(r => r.ResourceId == id);
+            if (resource == null) return NotFound();
+            return View(resource);
+        }
     }
 }

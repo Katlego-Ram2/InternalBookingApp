@@ -1,0 +1,67 @@
+@model IEnumerable<InternalBookingApp.Models.Resource>
+
+@{
+    ViewData["Title"] = "Resources";
+}
+
+<div style="max-width: 900px; margin: 50px auto; padding: 30px; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: Arial, sans-serif;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0; font-weight: 700; font-size: 1.8rem; color: #212529;">Resources</h2>
+        <a asp-action="Create"
+           style="padding: 10px 18px; background-color: #28a745; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background-color 0.3s ease;">
+            Add New Resource
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div style="padding: 15px; background-color: #e9ecef; border-radius: 6px; text-align: center; font-size: 1.1rem; color: #495057;">
+            No resources found. Click "Add New Resource" to get started.
+        </div>
+    }
+    else
+    {
+        <table style="width: 100%; border-collapse: collapse; font-size: 1rem;">
+            <thead style="background-color: #343a40; color: white;">
+                <tr>
+                    <th style="padding: 12px 15px; text-align: left;">Name</th>
+                    <th style="padding: 12px 15px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var resource in Model)
+                {
+                    <tr style="border-bottom: 1px solid #dee2e6; background-color:@( (resource.ResourceId % 2 == 0) ? "#f8f9fa" : "white" ); transition: background-color 0.3s ease;">
+                        <td style="padding: 10px 15px; color: #212529;">@resource.Name</td>
+                        <td style="padding: 10px 15px; text-align: right;">
+                            <a asp-action="Edit" asp-route-id="@resource.ResourceId"
+                               style="margin-right: 12px; color: #007bff; text-decoration: none; font-weight: 600;"
+                               onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@resource.ResourceId"
+                               style="margin-right: 12px; color: #dc3545; text-decoration: none; font-weight: 600;"
+                               onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Delete</a>
+                            <a asp-action="Details" asp-route-id="@resource.ResourceId"
+                               style="color: #6c757d; text-decoration: none; font-weight: 600;"
+                               onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<script>
+    const createBtn = document.querySelector('a[asp-action="Create"]');
+    createBtn.addEventListener('mouseenter', () => {
+        createBtn.style.backgroundColor = '#218838';
+        createBtn.style.boxShadow = '0 4px 12px rgba(33, 136, 56, 0.6)';
+        createBtn.style.transform = 'scale(1.05)';
+    });
+
+    createBtn.addEventListener('mouseleave', () => {
+        createBtn.style.backgroundColor = '#28a745';
+        createBtn.style.boxShadow = 'none';
+        createBtn.style.transform = 'scale(1)';
+    });
+</script>
