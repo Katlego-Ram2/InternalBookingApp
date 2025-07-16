@@ -1,40 +1,29 @@
 @model InternalBookingApp.Models.Resource
+
 @{
     ViewData["Title"] = "Resource Details";
 }
-<h2>@Model.Name</h2>
-<p><strong>Description:</strong> @Model.Description</p>
-<p><strong>Location:</strong> @Model.Location</p>
-<p><strong>Capacity:</strong> @Model.Capacity</p>
-<p><strong>Available:</strong> @(Model.IsAvailable ? "Yes" : "No")</p>
 
-<h4>Bookings</h4>
-@if (Model.Bookings.Any())
-{
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Start</th>
-            <th>End</th>
-            <th>Booked By</th>
-            <th>Purpose</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var booking in Model.Bookings)
-        {
-        <tr>
-            <td>@booking.StartTime</td>
-            <td>@booking.EndTime</td>
-            <td>@booking.BookedBy</td>
-            <td>@booking.Purpose</td>
-        </tr>
-        }
-    </tbody>
-</table>
-}
-else
-{
-<p>No bookings yet.</p>
-}
-<a href="/Resources/Index" class="btn btn-secondary">Back</a>
+<div style="max-width: 700px; margin: 40px auto; padding: 30px; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: Arial, sans-serif;">
+    <h2 style="font-weight: 700; font-size: 1.8rem; color: #212529; margin-bottom: 20px;">Resource Details</h2>
+
+    <dl>
+        <dt style="font-weight: 600; margin-top: 15px;">Name:</dt>
+        <dd>@Model.Name</dd>
+
+        <dt style="font-weight: 600; margin-top: 15px;">Description:</dt>
+        <dd>@Model.Description</dd>
+
+        <dt style="font-weight: 600; margin-top: 15px;">Location:</dt>
+        <dd>@Model.Location</dd>
+
+        <dt style="font-weight: 600; margin-top: 15px;">Capacity:</dt>
+        <dd>@Model.Capacity</dd>
+
+        <dt style="font-weight: 600; margin-top: 15px;">Available:</dt>
+        <dd>@(Model.IsAvailable ? "Yes" : "No")</dd>
+    </dl>
+
+    <a asp-action="Edit" asp-route-id="@Model.ResourceId" class="btn btn-primary" style="margin-top: 20px; padding: 10px 25px; border-radius: 6px; font-weight: 600;">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary" style="margin-left: 10px; padding: 10px 25px; border-radius: 6px; font-weight: 600; text-decoration: none; background-color: #6c757d; color: white;">Back to List</a>
+</div>

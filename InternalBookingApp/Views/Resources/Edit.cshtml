@@ -1,31 +1,49 @@
 @model InternalBookingApp.Models.Resource
+
 @{
     ViewData["Title"] = "Edit Resource";
 }
-<h2>Edit Resource</h2>
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
-    <div class="form-group">
-        <label asp-for="Location"></label>
-        <input asp-for="Location" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Capacity"></label>
-        <input asp-for="Capacity" class="form-control" />
-        <span asp-validation-for="Capacity" class="text-danger"></span>
-    </div>
-    <div class="form-check">
-        <input asp-for="IsAvailable" class="form-check-input" />
-        <label asp-for="IsAvailable" class="form-check-label">Available</label>
-    </div>
-    <button type="submit" class="btn btn-primary mt-2">Save</button>
-</form>
+
+<div style="max-width: 800px; margin: 40px auto; padding: 30px; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: Arial, sans-serif;">
+    <h2 style="font-weight: 700; font-size: 1.8rem; color: #212529; margin-bottom: 20px;">Edit Resource</h2>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="ResourceId" />
+
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label asp-for="Name" style="font-weight: 600;"></label>
+            <input asp-for="Name" class="form-control" style="width: 100%; padding: 8px;" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label asp-for="Description" style="font-weight: 600;"></label>
+            <textarea asp-for="Description" class="form-control" style="width: 100%; padding: 8px;"></textarea>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label asp-for="Location" style="font-weight: 600;"></label>
+            <input asp-for="Location" class="form-control" style="width: 100%; padding: 8px;" />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label asp-for="Capacity" style="font-weight: 600;"></label>
+            <input asp-for="Capacity" class="form-control" style="width: 100%; padding: 8px;" />
+            <span asp-validation-for="Capacity" class="text-danger"></span>
+        </div>
+
+        <div class="form-check" style="margin-bottom: 20px;">
+            <input asp-for="IsAvailable" class="form-check-input" id="IsAvailable" />
+            <label asp-for="IsAvailable" class="form-check-label" for="IsAvailable" style="font-weight: 600; margin-left: 5px;">Available</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="background-color: #007bff; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600;">Save</button>
+        <a asp-action="Index" class="btn btn-secondary" style="margin-left: 10px; padding: 10px 20px; border-radius: 6px; font-weight: 600; text-decoration: none; background-color: #6c757d; color: white;">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

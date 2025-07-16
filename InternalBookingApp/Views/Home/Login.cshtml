@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div style="max-width: 400px; margin: 60px auto; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: Arial, sans-serif;">
+    <h2 style="text-align: center; font-weight: 700; color: #343a40; margin-bottom: 25px;">Login</h2>
+
+    <form asp-action="Login" method="post">
+        <div style="margin-bottom: 20px;">
+            <label for="username" style="font-weight: 600;">Username</label>
+            <input type="text" name="username" class="form-control" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da;" />
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label for="role" style="font-weight: 600;">Role</label>
+            <select name="role" class="form-control" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ced4da;">
+                <option value="Admin">Admin</option>
+                <option value="User">User</option>
+            </select>
+        </div>
+        <div style="text-align: center;">
+            <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; font-weight: 600; border: none; border-radius: 6px; cursor: pointer;">
+                Login
+            </button>
+        </div>
+    </form>
+</div>
+

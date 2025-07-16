@@ -1,0 +1,26 @@
+﻿@model InternalBookingApp.Models.Resource
+
+@{
+    ViewData["Title"] = "Create Resource";
+}
+
+<div style="max-width: 600px; margin: 50px auto; padding: 30px; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: Arial, sans-serif;">
+    <h2 style="margin-bottom: 20px; font-size: 1.6rem; font-weight: 700; color: #212529;">Add New Resource</h2>
+
+    <form asp-action="Create" method="post">
+        <div style="margin-bottom: 20px;">
+            <label asp-for="Name" style="display: block; font-weight: 600; margin-bottom: 6px;">Name</label>
+            <input asp-for="Name" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px;" />
+            <span asp-validation-for="Name" style="color: #dc3545; font-size: 0.9rem;"></span>
+        </div>
+
+        <div style="display: flex; justify-content: flex-start; gap: 10px;">
+            <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                Save
+            </button>
+            <a asp-action="Index" style="padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

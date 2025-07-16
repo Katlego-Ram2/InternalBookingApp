@@ -1,71 +1,57 @@
-﻿using InternalBookingApp.Models;
-using InternalBookingApp.Services;
+﻿using InternalBookingApp.Data;
+using InternalBookingApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace InternalBookingApp.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BookingsController : ControllerBase
+    public class BookingsController : Controller
     {
-        private readonly BookingService _bookingService;
+        private readonly ApplicationDbContext _context;
 
-        public BookingsController(BookingService bookingService)
+        public BookingsController(ApplicationDbContext context)
         {
-            _bookingService = bookingService;
+            _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
+        // GET: Bookings/Create
+        public async Task<IActionResult> Create()
         {
-            var bookings = await _bookingService.GetAllBookingsAsync();
-            return Ok(bookings);
+            ViewBag.Resources = new SelectList(await _context.Resources.ToListAsync(), "Id", "Name");
+            return View();
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Booking>> GetBooking(int id)
-        {
-            var booking = await _bookingService.GetBookingByIdAsync(id);
-            if (booking == null)
-                return NotFound();
-
-            return booking;
-        }
-
+        // POST: Bookings/Create
         [HttpPost]
-        public async Task<IActionResult> CreateBooking(Booking booking)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Booking booking)
         {
-            // Check booking conflicts
-            var conflict = await _bookingService.IsBookingConflictAsync(booking.ResourceId, booking.StartTime, booking.EndTime);
+            ViewBag.Resources = new SelectList(await _context.Resources.ToListAsync(), "Id", "Name");
+
+            if (!ModelState.IsValid)
+                return View(booking);
+
+            // Booking conflict logic
+            bool conflict = await _context.Bookings.AnyAsync(b =>
+                b.ResourceId == booking.ResourceId &&
+                (
+                    (booking.StartTime >= b.StartTime && booking.StartTime < b.EndTime) ||
+                    (booking.EndTime > b.StartTime && booking.EndTime <= b.EndTime) ||
+                    (booking.StartTime <= b.StartTime && booking.EndTime >= b.EndTime)
+                ));
+
             if (conflict)
-                return BadRequest("Booking conflict detected for the selected resource and time.");
+            {
+                ViewBag.Conflict = "This resource is already booked during the selected time range.";
+                return View(booking);
+            }
 
-            await _bookingService.CreateBookingAsync(booking);
-            return CreatedAtAction(nameof(GetBooking), new { id = booking.BookingId }, booking);
-        }
+            _context.Bookings.Add(booking);
+            await _context.SaveChangesAsync();
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBooking(int id, Booking booking)
-        {
-            if (id != booking.BookingId)
-                return BadRequest();
-
-            // Check booking conflicts excluding current booking
-            var conflict = await _bookingService.IsBookingConflictAsync(booking.ResourceId, booking.StartTime, booking.EndTime, booking.BookingId);
-            if (conflict)
-                return BadRequest("Booking conflict detected for the selected resource and time.");
-
-            await _bookingService.UpdateBookingAsync(booking);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
-        {
-            await _bookingService.DeleteBookingAsync(id);
-            return NoContent();
+            TempData["Success"] = "Booking created successfully!";
+            return RedirectToAction("Create");
         }
     }
 }

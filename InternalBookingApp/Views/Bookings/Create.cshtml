@@ -1,32 +1,65 @@
 @model InternalBookingApp.Models.Booking
 @{
     ViewData["Title"] = "Create Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Create Booking</h2>
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label>Resource</label>
-        <select asp-for="ResourceId" class="form-control" asp-items="ViewBag.ResourceId"></select>
-    </div>
-    <div class="form-group">
-        <label>Start Time</label>
-        <input asp-for="StartTime" class="form-control" type="datetime-local" />
-        <span asp-validation-for="StartTime" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>End Time</label>
-        <input asp-for="EndTime" class="form-control" type="datetime-local" />
-        <span asp-validation-for="EndTime" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>Booked By</label>
-        <input asp-for="BookedBy" class="form-control" />
-        <span asp-validation-for="BookedBy" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>Purpose</label>
-        <input asp-for="Purpose" class="form-control" />
-        <span asp-validation-for="Purpose" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-success">Book</button>
-</form>
+
+<div class="container mt-5" style="max-width: 700px;">
+    <h2 class="mb-4 text-center text-primary">Book a Resource</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (ViewBag.Conflict != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewBag.Conflict
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <form asp-action="Create" method="post" class="shadow p-4 rounded bg-light">
+        <div class="mb-3">
+            <label asp-for="ResourceId" class="form-label fw-semibold">Select Resource</label>
+            <select asp-for="ResourceId" class="form-select" asp-items="ViewBag.Resources">
+                <option value="">-- Choose a resource --</option>
+            </select>
+            <span asp-validation-for="ResourceId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="StartTime" class="form-label fw-semibold">Start Time</label>
+            <input asp-for="StartTime" class="form-control" type="datetime-local" />
+            <span asp-validation-for="StartTime" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="EndTime" class="form-label fw-semibold">End Time</label>
+            <input asp-for="EndTime" class="form-control" type="datetime-local" />
+            <span asp-validation-for="EndTime" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="BookedBy" class="form-label fw-semibold">Booked By</label>
+            <input asp-for="BookedBy" class="form-control" />
+            <span asp-validation-for="BookedBy" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Purpose" class="form-label fw-semibold">Purpose</label>
+            <textarea asp-for="Purpose" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Purpose" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2">Submit Booking</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

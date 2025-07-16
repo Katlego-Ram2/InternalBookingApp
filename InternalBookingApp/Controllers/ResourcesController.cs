@@ -2,7 +2,6 @@
 using InternalBookingApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace InternalBookingApp.Controllers
@@ -22,17 +21,25 @@ namespace InternalBookingApp.Controllers
             return View(resources);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var resource = await _context.Resources.FirstOrDefaultAsync(r => r.ResourceId == id);
+            if (resource == null) return NotFound();
+            return View(resource);
+        }
+
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Resource resource)
         {
             if (ModelState.IsValid)
             {
-                _context.Resources.Add(resource);
+                _context.Add(resource);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -47,14 +54,25 @@ namespace InternalBookingApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Resource resource)
         {
             if (id != resource.ResourceId) return BadRequest();
 
             if (ModelState.IsValid)
             {
-                _context.Update(resource);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Update(resource);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await _context.Resources.AnyAsync(r => r.ResourceId == id))
+                        return NotFound();
+                    else
+                        throw;
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(resource);
@@ -68,19 +86,13 @@ namespace InternalBookingApp.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var resource = await _context.Resources.FindAsync(id);
             _context.Resources.Remove(resource);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            var resource = await _context.Resources.FirstOrDefaultAsync(r => r.ResourceId == id);
-            if (resource == null) return NotFound();
-            return View(resource);
         }
     }
 }
