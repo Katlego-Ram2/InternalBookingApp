@@ -10,8 +10,7 @@ namespace InternalBookingApp.Models
         public int ResourceId { get; set; }
 
         [NotMapped]
-        public int Id => ResourceId; // ✅ optional alias
-
+        public int Id => ResourceId; 
         [Required]
         [MaxLength(150)]
         public string Name { get; set; } = string.Empty;
